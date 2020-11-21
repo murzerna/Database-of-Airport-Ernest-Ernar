@@ -122,8 +122,6 @@ FOREIGN KEY (flight_id) REFERENCES Flights(flight_id)
 );
 
 ALTER TABLE flight_schedules DROP COLUMN f_time; 
-ALTER TABLE flight_schedules ADD COLUMN f_time TIMESTAMP;
-
 ALTER TABLE Passengers drop column cafe_id;
 ALTER TABLE Passengers add column class_of_pg VARCHAR(20);
 
