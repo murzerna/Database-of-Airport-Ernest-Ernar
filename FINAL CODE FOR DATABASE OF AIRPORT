@@ -1,0 +1,279 @@
+create table Pilots(
+pilot_id INT,
+first_name_p VARCHAR(32), 
+last_name_p VARCHAR(32),
+hire_date DATE,
+phone_number VARCHAR(64),
+airl_id INT,
+flight_id INT,
+FOREIGN KEY (flight_id) REFERENCES Flights(flight_id),
+FOREIGN KEY (airl_id) REFERENCES Airlines(airl_id)
+);
+
+--Created a table for pilots and assigned them air_id, flight_id to know which airline the pilot works for and which flight he serves.
+
+create table Stewardesses(
+stew_id INT,
+first_name_s VARCHAR(32),
+last_name_s VARCHAR(32),
+hire_date DATE,
+phone_number VARCHAR(64),
+airl_id INT,
+flight_id INT,
+PRIMARY KEY (stew_id),
+FOREIGN KEY (flight_id) REFERENCES Flights(flight_id),
+FOREIGN KEY (airl_id) REFERENCES Airlines(airl_id)
+);
+
+--Creating a table for the service personnel on Board the aircraft, where we specify their data, the airline they work for and which flight they serve
+
+create table Passengers(
+ticket_id INT,
+first_name_pg VARCHAR(32),
+last_name_pg VARCHAR(32),
+hire_date DATE,
+phone_number VARCHAR(64),
+airl_id INT,
+flight_id INT,
+baggage_id INT,
+cafe_id INT,
+class_of_pg VARCHAR(10),
+PRIMARY KEY (ticket_id),
+FOREIGN KEY (flight_id) REFERENCES Flights(flight_id),
+FOREIGN KEY (airl_id) REFERENCES Airlines(airl_id),
+FOREIGN KEY (baggage_id) REFERENCES Baggage(baggage_id),
+FOREIGN KEY (cafe_id) REFERENCES Cafe(cafe_id),
+FOREIGN KEY (class_of_pg) REFERENCES Classes(class_of_pg)
+);
+
+--We create a table for the airline customer, specify their personal data, which airline they fly, which flight, where they eat, and what class they belong to.
+
+create table Flights(
+flight_id INT,
+airplanes_id INT,
+airl_id INT,
+departure_city VARCHAR(64),
+arrival_city VARCHAR(64),
+PRIMARY KEY (flight_id),
+FOREIGN KEY (airplanes_id) REFERENCES Airplanes(airplanes_id),
+FOREIGN KEY (airl_id) REFERENCES Airlines(airl_id)
+);
+
+/*Creating a table for flights, creating a primary key for flight_id, and applying it to other tables,
+thanks to foreign keys, we know what information about flights consists of */
+
+create table Baggage(
+baggage_id INT,
+capacity DECIMAL,
+weight DECIMAL,
+dimensions DECIMAL,
+PRIMARY KEY (baggage_id)
+);
+
+--Creating a table for baggage, a unique baggage_id for each customer's baggage, and information about the baggage.
+
+create table Airlines(
+airl_id INT,
+airlines_name VARCHAR(32),
+airplanes_id INT,
+class_of_airl VARCHAR(10),
+PRIMARY KEY (airl_id),
+FOREIGN KEY (airplanes_id) REFERENCES Airplanes(airplanes_id)
+);
+/*Creating a table for the airline, where we specify a unique url_id to know what kind of company it is, the company name, 
+and thanks to foreign keys, to know what is included in the "Airlines" table" */
+
+create table Airplanes(
+airplanes_id INT,
+model_name VARCHAR(64),
+PRIMARY KEY (airplanes_id),
+FOREIGN KEY (model_name) REFERENCES Aircraft_models(model_name)
+);
+
+--Creating a table for planes, assigning a unique airfanes_id to know the number of planes in the airline, and adding information about the model name and model_id
+
+create table Aircraft_models( 
+model_name VARCHAR(64),
+PRIMARY KEY (model_name)
+);
+
+--Creating a table for aircraft models, in this table we fill in information about aircraft models 
+
+create table Cafe(
+cafe_id INT,
+cafe_name VARCHAR(32),
+PRIMARY KEY (cafe_id) 
+);
+
+create table Classes(
+class_of_pg VARCHAR(20),
+PRIMARY KEY (class_of_pg)
+);
+
+--Create a table for classes, where you specify the class type of passenger(business or economy), and class check(status airline)
+
+create table flight_schedules(
+flight_id INT,
+f_time TIMESTAMP,
+status varchar(20),
+airl_id INT,
+FOREIGN KEY (airl_id) REFERENCES Airlines(airl_id),
+FOREIGN KEY (flight_id) REFERENCES Flights(flight_id)
+);
+
+ALTER TABLE flight_schedules DROP COLUMN f_time; 
+ALTER TABLE flight_schedules ADD COLUMN f_time TIMESTAMP;
+
+ALTER TABLE Passengers drop column cafe_id;
+ALTER TABLE Passengers add column class_of_pg VARCHAR(20);
+
+drop table Cafe;
+
+ALTER TABLE Flights ADD COLUMN departure_city VARCHAR(64);            --add column departure_city
+ALTER TABLE Flights ADD COLUMN arrival_city VARCHAR(64);              --add column arrival_city
+alter table Passengers drop column hire_date;                         --drop column hire_date from table Passengers
+alter table Classes add column class_id INT;                          --add column class_id for table Classes
+alter table Aircraft_models add column model_id INT;                  --add column model_id for table Aircraft_models
+alter table Airlines drop column airplanes_id;                        
+alter table Airlines add column model_name VARCHAR(64);               /*drop column airplanes_id and add column model_name in table Airlines*/
+alter table Airlines drop column class_of_airl;                       --drop column class_of_airl from table Airlines
+
+
+insert into Pilots (pilot_id, first_name_p, last_name_p , hire_date, phone_number, airl_id, flight_id)
+values (0001, 'John','Satypov', '02.05.1997', '89111517415', 900010, 1000001),
+(0002, 'Tom','Utebayev', '03.03.2003', '89113457415', 900008, 1000002),
+(0003, 'Mike','Franchesko', '31.12.1998', '89134534414', 900006, 1000003),
+(0004, 'Alex','Stendall', '12.07.2001', '89111514355', 900005, 1000004),
+(0005, 'Rustam','Popov', '22.03.1994', '89111854383', 900009, 1000005),
+(0006, 'Ruslan','Ivanov', '03.04.2006', '87435317412', 900010, 1000006),
+(0007, 'Sergey','Khusenko', '13.08.2003', '83453517451', 900005, 1000007),
+(0008, 'Daulet','Dauletov', '15.01.1981', '89125255415', 900001, 1000008),
+(0009, 'Medina','Armanova', '08.06.2018', '89111556317', 900001, 1000009),
+(00010, 'Ernest','Murzashev', '20.11.2020', '82456245248', 900002, 1000010)
+
+insert into Stewardesses (stew_id, first_name_s, last_name_s , hire_date, phone_number, airl_id, flight_id)
+values (001, 'Jessica','Murzasheva', '10.05.2004', '89111272722', 900010, 1000001),
+(002, 'Karina','Kalibekova', '03.05.2002', '89113447415', 900008, 1000002),
+(003, 'Amina','Kim', '23.11.2005', '89134534414', 900006, 1000003),
+(004, 'Ramina','Freak', '14.08.2006', '84526452425', 900005, 1000004),
+(005, 'Madina','Gazilina', '11.09.2007', '89111852263', 900009, 1000005),
+(006, 'Oleg','Gazmanov', '19.01.2008', '82535317412', 900010, 1000006),
+(007, 'Dmitry','Terenkov', '20.02.2012', '83442597845', 900005, 1000007),
+(008, 'Katya','Dushko', '27.10.2000', '89125255415', 900001, 1000008),
+(009, 'Emina','Armanova', '07.11.2001', '82511556317', 900001, 1000009),
+(0010, 'Kamila','Murzasheva', '18.09.1998', '82456245123', 900002, 1000010)
+
+insert into Passengers(ticket_id, first_name_pg, last_name_pg, phone_number, airl_id, flight_id, baggage_id, class_of_pg)
+values (01, 'Jessica','Rockstil', '89115648722', 900001, 1000001, 600004, 1),
+(02, 'Tomara','Kalibekova', '89113412475', 900002, 1000002, 600001, 3),
+(03, 'Amina','Pak', '89134123414', 900003, 1000003, 600002, 2),
+(04, 'Frenk','Stendall', '89111517425', 900004, 1000004, 600004, 1),
+(05, 'Madina','Asapova', '89148852263', 900005, 1000005, 600002, 3),
+(06, 'Timur','Gazmanov', '82535312312', 900006, 1000006, 600001, 3),
+(07, 'Sergey','Masenkov', '83453578451', 900007, 1000007, 600003, 2),
+(08, 'Alisa','Dushko', '89125299415', 900008, 1000008, 600001, 3),
+(09, 'Emina','Fadimova', '82533634317', 900009, 1000009, 600001, 3),
+(010, 'Nik','Murzashev', '82453456248', 900010, 1000010, 600002, 3)
+
+alter table Passengers add column baggage_id INT;
+
+
+insert into Classes (class_id, class_of_pg)
+values (1, 'Business class'),
+(2, 'First-class'),
+(3, 'Economy class')
+
+insert into Aircraft_models (model_id, model_name)
+values (000011, 'Airbus'),
+(000012, 'Boeing'),
+(000013, 'CRAIC'),
+(000014, 'Comac'),
+(000015, 'Mitsubishi')
+
+insert into Airplanes(airplanes_id, model_name)
+values (700001,'Airbus'),
+(700002, 'Boeing'),
+(700003, 'CRAIC'),
+(700004, 'Mitsubishi'),    --конкретный айдишник самолета в мире и какой он модели 
+(700005, 'CRAIC'),
+(700006, 'Comac'),
+(700007, 'Comac'),
+(700008, 'Boeing')
+
+
+insert into Airlines (airl_id, airlines_name, model_name)
+values (900001, 'AirAstana', 'Boeing'),
+(900002, 'SCAT', 'Airbus'),
+(900003, 'Emirates', 'Boeing'),
+(900004, 'American Airlines', 'Boeing'),
+(900005, 'FlyDubai', 'Boeing'),
+(900006, 'Aэрофлот', 'Airbus'),
+(900007, 'KLM', 'Comac'),
+(900008, 'IndiGo', 'Comac'),
+(900009, 'EasyJet', 'CRAIC'),
+(900010, 'Lufthansa', 'Mitsubishi')
+
+insert into Baggage (baggage_id, capacity, weight, dimensions)
+values (600001, 25, 20, 0.8),
+(600002, 30, 22, 0.95),
+(600003, 40, 26, 1.1),
+(600004, 50, 30, 1.2)
+
+
+insert into Flights (flight_id, airplanes_id, airl_id, departure_city, arrival_city)
+values (1000001, 700004, 900010, 'Dortmund', 'Berlin'),
+(1000002, 700006, 900008, 'New Delhi', 'Beijing'),
+(1000003, 700005, 900006, 'Beijing', 'Moscow'),
+(1000004, 700008, 900005, 'Abu Dhabi', 'Berlin'),
+(1000005, 700003, 900009, 'London', 'Dublin'),
+(1000006, 700004, 900010, 'Berlin', 'Hamburg'),
+(1000007, 700008, 900005, 'Berlin', 'Katowice'),
+(1000008, 700002, 900001, 'Astana', 'Almaty'),
+(1000009, 700002, 900001, 'Almaty', 'Tashkent'),
+(1000010, 700001, 900002, 'Almaty', 'Astana')
+
+insert into flight_schedules(flight_id, status, airl_id)
+values (1000001, 'check-in', 900010),
+(1000002, 'check-in', 900008),
+(1000003, 'postponed', 900006),
+(1000004, 'check-in', 900005),
+(1000005, 'check-in', 900009),
+(1000006, 'cancelled', 900010),
+(1000007, 'check-in', 900005),
+(1000008, 'check-in', 900001),
+(1000009, 'postponed', 900001),
+(1000010, 'check-in', 900002)
+
+select * from Passengers;
+
+select distinct (model_name) from Airplanes;
+
+select distinct (status) 
+from flight_schedules;
+
+select count(distinct model_name)
+As CountOfModel
+from Airlines;
+
+select max(capacity)
+from Baggage;
+
+select min(weight)
+from Baggage;
+
+select*from Baggage
+where capacity< 45 and dimensions>0.85;
+
+select * from Passengers
+where (first_name_pg like 'A%');
+
+select * from Pilots 
+where (first_name_p like 'R%' OR first_name_p like 'M%')
+and hire_date < '15.05.2009';
+
+select Pilots.pilot_id, Pilots.first_name_p, Stewardesses.stew_id, Stewardesses.first_name_s 
+from Pilots INNER JOIN Stewardesses
+on Pilots.airl_id = Stewardesses.airl_id;
+
+SELECT SUM(capacity)
+FROM Baggage;
